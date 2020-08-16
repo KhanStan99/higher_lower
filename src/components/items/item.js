@@ -1,19 +1,13 @@
-import React, { useState } from "react";
-import Avatar from "@material-ui/core/Avatar";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import { red, blue } from "@material-ui/core/colors";
-import Paper from "@material-ui/core/Paper";
 import "./item.css";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+
+const base_url = "https://api.jsonbin.io/b/5f3978d4af209d1016bcadc5";
+const img_base_url = "http://api.higherlowergame.com/_client/images/general/";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,7 +28,30 @@ export default function Item() {
 
   const direction = matches ? "row" : "column";
   const imgClass = matches ? "item__card_desktop" : "item__card_mobile";
-  return (
+
+  const [mainData, setMainData] = useState(null);
+
+  useEffect(() => {
+    fetch(base_url, {
+      headers: {
+        "secret-key":
+          "$2a$10$9d0LIqF4KQ1JLDGDbamPtewIS4ZpGSPW5rhWwd3W/QETlc9CaNcm6",
+      },
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          console.log("DOING?");
+          setMainData(shuffle(result));
+        },
+
+        (error) => {
+          console.log("Errr", error);
+        }
+      );
+  }, []);
+
+  return mainData ? (
     <Grid
       container
       justify="flex-start"
@@ -43,17 +60,22 @@ export default function Item() {
       direction={direction}
     >
       <Grid item xs={matches ? 6 : 12} width="100%">
-        <img
-          className={imgClass}
-          src="http://api.higherlowergame.com/_client/images/general/yoko-ono.jpg"
-        />
+        <div style={{ position: "relative" }}>
+          <img className={imgClass} src={img_base_url + mainData[66].image} />
+          <div style={{ color: "white", position: "absolute", top: "10px" }}>
+            Text
+          </div>
+        </div>
       </Grid>
       <Grid item xs={matches ? 6 : 12} width="100%">
-        <img
-          className={imgClass}
-          src="http://api.higherlowergame.com/_client/images/general/tas-pappas.jpg"
-        />
+        <img className={imgClass} src={img_base_url + mainData[44].image} />
       </Grid>
     </Grid>
+  ) : (
+    <p>LOADING!!!</p>
   );
+}
+
+function shuffle(array) {
+  return array.sort(() => Math.random() - 0.5);
 }
