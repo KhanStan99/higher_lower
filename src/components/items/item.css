@@ -1,0 +1,15 @@
+.item__card_desktop {
+  width: 100%;
+  height: 100vh;
+  display: block;
+  object-fit: cover;
+  filter: brightness(20%);
+}
+
+.item__card_mobile {
+  width: 100%;
+  height: 50vh;
+  display: block;
+  object-fit: cover;
+  filter: brightness(20%);
+}
