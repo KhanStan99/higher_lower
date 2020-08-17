@@ -42,7 +42,8 @@
 .card_css {
   position: fixed;
   z-index: 1;
-  bottom: 0;
+  top: 0;
+  color: white;
   margin: 0 auto;
   margin: 20px;
   text-align: center;

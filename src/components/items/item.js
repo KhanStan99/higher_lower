@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import "./item.css";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import Card from "@material-ui/core/Card";
 import { green, red } from "@material-ui/core/colors";
+import Grid from "@material-ui/core/Grid";
+import Snackbar from "@material-ui/core/Snackbar";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import React, { useEffect, useState } from "react";
+import MuiAlert from "@material-ui/lab/Alert";
+import "./item.css";
 
 const base_url = "https://api.jsonbin.io/b/5f3978d4af209d1016bcadc5";
 const img_base_url = "http://api.higherlowergame.com/_client/images/general/";
@@ -39,6 +40,9 @@ export default function Item() {
   const [score, setScore] = useState(0);
   const [firstItem, setFirstItem] = useState(0);
   const [secondItem, setSecondItem] = useState(1);
+  const [open, setOpen] = useState(false);
+  const [alertType, setAlertType] = useState(null);
+  const [alertMsg, setAlertMsg] = useState("null");
 
   useEffect(() => {
     fetch(base_url, {
@@ -58,38 +62,95 @@ export default function Item() {
       );
   }, []);
 
-  function handleClick(e) {
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
+  const handleClick = (e) => {
     if (e === "lower") {
       if (
-        mainData[firstItem].searchVolume > mainData[secondItem].searchVolume
+        mainData[secondItem].searchVolume < mainData[firstItem].searchVolume
       ) {
-        setFirstItem(firstItem + 1);
-        setSecondItem(secondItem + 1);
-        setScore(score + 1);
+        won();
       } else {
-        console.log("LOSE!, it was ", mainData[secondItem].searchVolume);
-        setScore(0);
+        lost();
       }
     } else {
       if (
-        mainData[firstItem].searchVolume < mainData[secondItem].searchVolume
+        mainData[secondItem].searchVolume > mainData[firstItem].searchVolume
       ) {
-        setFirstItem(firstItem + 1);
-        setSecondItem(secondItem + 1);
-        setScore(score + 1);
+        won();
       } else {
-        console.log("LOSE!, it was ", mainData[secondItem].searchVolume);
-        setScore(0);
+        lost();
       }
     }
-  }
+    setOpen(true);
+  };
+
+  const won = () => {
+    setAlertType("success");
+    setAlertMsg(
+      "SUCCESS! " +
+        mainData[firstItem].keyword +
+        ": " +
+        formatNumber(
+          mainData[firstItem].searchVolume +
+            "\n" +
+            mainData[secondItem].keyword +
+            ": " +
+            formatNumber(mainData[secondItem].searchVolume)
+        )
+    );
+    setFirstItem(firstItem + 1);
+    setSecondItem(secondItem + 1);
+    setScore(score + 1);
+  };
+
+  const lost = () => {
+    setAlertMsg(
+      "FAILED! \n" +
+        mainData[firstItem].keyword +
+        ": " +
+        formatNumber(
+          mainData[firstItem].searchVolume +
+            "\n" +
+            mainData[secondItem].keyword +
+            ": " +
+            formatNumber(mainData[secondItem].searchVolume)
+        )
+    );
+
+    if (localStorage.getItem("highScore") < score) {
+      localStorage.setItem("highScore", score);
+    }
+
+    setScore(0);
+    setAlertType("error");
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
 
   return mainData ? (
     <div className="app">
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity={alertType}>
+          {alertMsg}
+        </Alert>
+      </Snackbar>
       <div className="card_css">
-        <Card className={classes.appScore} variant="outlined">
-          Score: {score}
-        </Card>
+        <Typography>
+          <b>Score: {score}</b>
+        </Typography>
+        {localStorage.getItem("highScore") ? (
+          <Typography>
+            <b>Highscore: {localStorage.getItem("highScore")}</b>
+          </Typography>
+        ) : null}
       </div>
       <Grid
         container
@@ -101,6 +162,7 @@ export default function Item() {
           <div style={{ position: "relative" }}>
             <img
               className={imgClass}
+              alt={mainData[firstItem].keyword}
               src={img_base_url + mainData[firstItem].image}
             />
             <div className="item__centered_current">
@@ -114,6 +176,7 @@ export default function Item() {
         <Grid item xs={matches ? 6 : 12} width="100%">
           <img
             className={imgClass}
+            alt={mainData[secondItem].keyword}
             src={img_base_url + mainData[secondItem].image}
           />
           <div className="item__centered_next">
