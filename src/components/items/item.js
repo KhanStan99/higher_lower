@@ -30,6 +30,8 @@ export default function Item() {
   const imgClass = matches ? "item__card_desktop" : "item__card_mobile";
 
   const [mainData, setMainData] = useState(null);
+  const [firstItem, setFirstItem] = useState(0);
+  const [secondItem, setSecondItem] = useState(1);
 
   useEffect(() => {
     fetch(base_url, {
@@ -41,10 +43,8 @@ export default function Item() {
       .then((res) => res.json())
       .then(
         (result) => {
-          console.log("DOING?");
           setMainData(shuffle(result));
         },
-
         (error) => {
           console.log("Errr", error);
         }
@@ -52,23 +52,35 @@ export default function Item() {
   }, []);
 
   return mainData ? (
-    <Grid
-      container
-      justify="flex-start"
-      spacing={0}
-      className={classes.root}
-      direction={direction}
-    >
+    <Grid container spacing={0} className={classes.root} direction={direction}>
       <Grid item xs={matches ? 6 : 12} width="100%">
         <div style={{ position: "relative" }}>
-          <img className={imgClass} src={img_base_url + mainData[66].image} />
-          <div style={{ color: "white", position: "absolute", top: "10px" }}>
-            Text
-          </div>
+          <img
+            className={imgClass}
+            src={img_base_url + mainData[firstItem].image}
+          />
+          <div
+            style={{ color: "white", position: "absolute", top: "10px" }}
+          ></div>
         </div>
       </Grid>
-      <Grid item xs={matches ? 6 : 12} width="100%">
-        <img className={imgClass} src={img_base_url + mainData[44].image} />
+      <Grid item xs={matches ? 6 : 12} width="100%" >
+        <img
+          className={imgClass}
+          src={img_base_url + mainData[secondItem].image}
+        />
+        <div className="item__centered">
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => {
+              setFirstItem(firstItem + 1);
+              setSecondItem(secondItem + 1);
+            }}
+          >
+            Click me
+          </Button>
+        </div>
       </Grid>
     </Grid>
   ) : (

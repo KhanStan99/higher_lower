@@ -13,3 +13,12 @@
   object-fit: cover;
   filter: brightness(20%);
 }
+
+.item__centered {
+  position: absolute;
+  margin: auto;
+  width: 50%;
+  padding: 10px;
+
+}
+
