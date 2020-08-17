@@ -1,3 +1,8 @@
+.app {
+  display: flex;
+  justify-content: center;
+}
+
 .item__card_desktop {
   width: 100%;
   height: 100vh;
@@ -14,11 +19,41 @@
   filter: brightness(20%);
 }
 
-.item__centered {
+.item__centered_current {
+  color: white;
+  display: flex;
   position: absolute;
-  margin: auto;
-  width: 50%;
-  padding: 10px;
-
+  top: 50%;
+  left: 30%;
+  text-align: center;
+  flex-direction: column;
 }
 
+.item__centered_next {
+  color: white;
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 70%;
+  text-align: center;
+  flex-direction: column;
+}
+
+.card_css {
+  position: fixed;
+  z-index: 1;
+  bottom: 0;
+  margin: 0 auto;
+  margin: 20px;
+  text-align: center;
+}
+
+.margin10 {
+  margin: 10px !important;
+}
+
+/* author: "Public Domain"
+image: "yoko-ono.jpg"
+keyword: "Yoko Ono"
+link: "https://commons.wikimedia.org/wiki/File:Lennons_by_Jack_Mitchell.jpg"
+searchVolume: 301000 */
