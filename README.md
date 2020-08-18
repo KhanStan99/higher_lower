@@ -13,7 +13,7 @@
 **How to run?**
 
 * Clone this repository.
-* `cd car-wise-ui`
+* `cd higher_lower`
 * `npm install`
 * `npm start`
 * The project will default load on port 3000
