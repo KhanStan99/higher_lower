@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import React, { useEffect, useState } from "react";
 import MuiAlert from "@material-ui/lab/Alert";
+import SimpleModal from "./modal";
 import "./item.css";
 
 const base_url = "https://api.jsonbin.io/b/5f3978d4af209d1016bcadc5";
@@ -43,6 +44,8 @@ export default function Item() {
   const [open, setOpen] = useState(false);
   const [alertType, setAlertType] = useState(null);
   const [alertMsg, setAlertMsg] = useState("null");
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState(null);
 
   useEffect(() => {
     fetch(base_url, {
@@ -107,23 +110,19 @@ export default function Item() {
   };
 
   const lost = () => {
-    setAlertMsg(
-      "FAILED! \n" +
-        mainData[firstItem].keyword +
-        ": " +
-        formatNumber(
-          mainData[firstItem].searchVolume +
-            "\n" +
-            mainData[secondItem].keyword +
-            ": " +
-            formatNumber(mainData[secondItem].searchVolume)
-        )
-    );
+    setAlertMsg("FAILED!");
 
     if (localStorage.getItem("highScore") < score) {
       localStorage.setItem("highScore", score);
     }
+    setModalMessage({
+      firstKeyWord: mainData[firstItem].keyword,
+      firstValue: formatNumber(mainData[firstItem].searchVolume),
+      secondKeyword: mainData[secondItem].keyword,
+      secondaValue: formatNumber(mainData[secondItem].searchVolume),
+    });
 
+    setShowModal(true);
     setScore(0);
     setAlertType("error");
   };
@@ -135,8 +134,17 @@ export default function Item() {
     setOpen(false);
   };
 
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
+
   return mainData ? (
     <div className="app">
+      <SimpleModal
+        showModal={showModal}
+        handleModalClose={handleModalClose}
+        modalMessage={modalMessage}
+      />
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={alertType}>
           {alertMsg}
