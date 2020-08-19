@@ -51,6 +51,7 @@
 
 .margin10 {
   margin: 10px !important;
+  max-width: 200px;
 }
 
 /* author: "Public Domain"

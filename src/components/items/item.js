@@ -37,6 +37,7 @@ export default function Item() {
   const direction = matches ? "row" : "column";
   const imgClass = matches ? "item__card_desktop" : "item__card_mobile";
 
+  const [loadMsg, setLoadMsg] = useState("Loading... Please wait!");
   const [mainData, setMainData] = useState(null);
   const [score, setScore] = useState(0);
   const [firstItem, setFirstItem] = useState(0);
@@ -60,7 +61,9 @@ export default function Item() {
           setMainData(shuffle(result));
         },
         (error) => {
-          console.log("Errr", error);
+          setLoadMsg(
+            "Opps! Looks like we ran into an issue, Please contact me here: https://twitter.com/KhanStan99"
+          );
         }
       );
   }, []);
@@ -72,7 +75,7 @@ export default function Item() {
   const handleClick = (e) => {
     if (e === "lower") {
       if (
-        mainData[secondItem].searchVolume < mainData[firstItem].searchVolume
+        mainData[secondItem].searchVolume <= mainData[firstItem].searchVolume
       ) {
         won();
       } else {
@@ -80,7 +83,7 @@ export default function Item() {
       }
     } else {
       if (
-        mainData[secondItem].searchVolume > mainData[firstItem].searchVolume
+        mainData[secondItem].searchVolume >= mainData[firstItem].searchVolume
       ) {
         won();
       } else {
@@ -123,7 +126,6 @@ export default function Item() {
     });
 
     setShowModal(true);
-    setScore(0);
     setAlertType("error");
   };
 
@@ -136,6 +138,14 @@ export default function Item() {
 
   const handleModalClose = () => {
     setShowModal(false);
+    setScore(0);
+    setMainData(shuffle(mainData));
+  };
+
+  const retry = () => {
+    setShowModal(false);
+    setScore(0);
+    setMainData(shuffle(mainData));
   };
 
   return mainData ? (
@@ -144,6 +154,8 @@ export default function Item() {
         showModal={showModal}
         handleModalClose={handleModalClose}
         modalMessage={modalMessage}
+        score={score}
+        retry={retry}
       />
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={alertType}>
@@ -174,8 +186,10 @@ export default function Item() {
               src={img_base_url + mainData[firstItem].image}
             />
             <div className="item__centered_current">
-              <Typography>{mainData[firstItem].keyword}</Typography>
-              <Typography>
+              <Typography variant="h4">
+                {mainData[firstItem].keyword}
+              </Typography>
+              <Typography variant="h6">
                 Searchs: {formatNumber(mainData[firstItem].searchVolume)}
               </Typography>
             </div>
@@ -188,7 +202,7 @@ export default function Item() {
             src={img_base_url + mainData[secondItem].image}
           />
           <div className="item__centered_next">
-            <Typography>{mainData[secondItem].keyword}</Typography>
+            <Typography variant="h4">{mainData[secondItem].keyword}</Typography>
             <LowerButton
               className="margin10"
               variant="contained"
@@ -210,7 +224,7 @@ export default function Item() {
       </Grid>
     </div>
   ) : (
-    <p>LOADING!!!</p>
+    <p>{loadMsg}</p>
   );
 }
 
