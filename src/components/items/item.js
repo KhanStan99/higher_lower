@@ -62,7 +62,7 @@ export default function Item() {
         },
         (error) => {
           setLoadMsg(
-            "Opps! Looks like we ran into an issue, Please contact me here: https://twitter.com/KhanStan99"
+            "Opps! Looks like we ran into an issue, Please contact me here: https://twitter.com/KhanStan99 --- Error Log: " + error
           );
         }
       );
