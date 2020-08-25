@@ -163,12 +163,12 @@ export default function Item() {
         </Alert>
       </Snackbar>
       <div className="card_css">
-        <Typography>
-          <b>Score: {score}</b>
+        <Typography variant="h4">
+          Score: {score}
         </Typography>
         {localStorage.getItem("highScore") ? (
-          <Typography>
-            <b>Highscore: {localStorage.getItem("highScore")}</b>
+          <Typography variant="h5">
+            Highscore: {localStorage.getItem("highScore")}
           </Typography>
         ) : null}
       </div>
@@ -179,46 +179,50 @@ export default function Item() {
         direction={direction}
       >
         <Grid item xs={matches ? 6 : 12} width="100%">
-          <div style={{ position: "relative" }}>
+          <div className="app__items">
             <img
               className={imgClass}
               alt={mainData[firstItem].keyword}
               src={img_base_url + mainData[firstItem].image}
             />
             <div className="item__centered_current">
-              <Typography variant="h4">
+              <Typography variant="h3">
                 {mainData[firstItem].keyword}
               </Typography>
-              <Typography variant="h6">
-                Searchs: {formatNumber(mainData[firstItem].searchVolume)}
+              <Typography variant="h4">
+                Searches: {formatNumber(mainData[firstItem].searchVolume)}
               </Typography>
             </div>
           </div>
         </Grid>
         <Grid item xs={matches ? 6 : 12} width="100%">
-          <img
-            className={imgClass}
-            alt={mainData[secondItem].keyword}
-            src={img_base_url + mainData[secondItem].image}
-          />
-          <div className="item__centered_next">
-            <Typography variant="h4">{mainData[secondItem].keyword}</Typography>
-            <LowerButton
-              className="margin10"
-              variant="contained"
-              color="primary"
-              onClick={() => handleClick("lower")}
-            >
-              LOWER
-            </LowerButton>
-            <HigherButton
-              className="margin10"
-              variant="contained"
-              color="primary"
-              onClick={() => handleClick("higher")}
-            >
-              HIGHER
-            </HigherButton>
+          <div className="app__items">
+            <img
+              className={imgClass}
+              alt={mainData[secondItem].keyword}
+              src={img_base_url + mainData[secondItem].image}
+            />
+            <div className="item__centered_next">
+              <Typography display="inline" align="center" variant="h3">
+                {mainData[secondItem].keyword}
+              </Typography>
+              <LowerButton
+                className="margin10"
+                variant="contained"
+                color="primary"
+                onClick={() => handleClick("lower")}
+              >
+                LOWER
+              </LowerButton>
+              <HigherButton
+                className="margin10"
+                variant="contained"
+                color="primary"
+                onClick={() => handleClick("higher")}
+              >
+                HIGHER
+              </HigherButton>
+            </div>
           </div>
         </Grid>
       </Grid>
@@ -235,6 +239,7 @@ function shuffle(array) {
 const LowerButton = withStyles((theme) => ({
   root: {
     color: theme.palette.getContrastText(red[500]),
+    width: "100%",
     backgroundColor: red[900],
     "&:hover": {
       backgroundColor: red[700],
@@ -244,10 +249,11 @@ const LowerButton = withStyles((theme) => ({
 
 const HigherButton = withStyles((theme) => ({
   root: {
-    color: theme.palette.getContrastText(green[500]),
-    backgroundColor: green[900],
+    color: theme.palette.getContrastText(green[900]),
+    width: "100%",
+    backgroundColor: green[500],
     "&:hover": {
-      backgroundColor: green[700],
+      backgroundColor: green[900],
     },
   },
 }))(Button);
