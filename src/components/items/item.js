@@ -10,7 +10,7 @@ import MuiAlert from "@material-ui/lab/Alert";
 import SimpleModal from "./modal";
 import "./item.css";
 
-const base_url = "https://api.jsonbin.io/b/5f3978d4af209d1016bcadc5";
+const base_url = "https://api.jsonbin.io/v3/b/5f3978d4af209d1016bcadc5";
 const img_base_url = "http://api.higherlowergame.com/_client/images/general/";
 
 const useStyles = makeStyles((theme) => ({
@@ -51,14 +51,14 @@ export default function Item() {
   useEffect(() => {
     fetch(base_url, {
       headers: {
-        "secret-key":
+        "X-Master-Key":
           "$2a$10$9d0LIqF4KQ1JLDGDbamPtewIS4ZpGSPW5rhWwd3W/QETlc9CaNcm6",
       },
     })
       .then((res) => res.json())
       .then(
         (result) => {
-          setMainData(shuffle(result));
+          setMainData(shuffle(result.record));
         },
         (error) => {
           setLoadMsg(
